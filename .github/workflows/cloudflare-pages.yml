@@ -1,0 +1,87 @@
+name: Cloudflare Pages
+on:
+  workflow_dispatch:
+  push:
+    branches:
+    - main
+    paths:
+    - 'src/**'
+    - '!**/*.md'
+  pull_request:
+    paths:
+    - 'src/**'
+    - '!**/*.md'
+
+env:
+  CONFIGURATION: Release
+  DOTNET_CORE_VERSION: 7.0.x
+  NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+  WORKING_DIRECTORY: src
+  TESTING_DIRECTORY: src
+  PUBLISH_DIRECTORY: output
+  PAGES_PROJECTNAME: try-cloudflare-pages-upload-with-gh-actions
+
+jobs:
+  deploy:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+    name: on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+      deployments: write
+      statuses: write # for commit status
+    steps:
+    - name: 🛒 Checkout
+      uses: actions/checkout@v3.5.0
+    - name: 💴 Cache
+      id: cache-nuget
+      uses: actions/cache@v3.3.1
+      with:
+        path: ${{ env.NUGET_PACKAGES }}
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+    - name: ❔ Cache Hit ${{ steps.cache-nuget.outputs.cache-hit }}
+      run: |
+        echo "→ ${{ steps.cache-nuget.outputs.cache-hit }}"
+    - name: ✨ Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
+    - name: 🚚 Restore with lock files
+      run: dotnet restore "${{ env.WORKING_DIRECTORY }}" --locked-mode
+    - name: 🛠️ Build
+      run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
+    - name: 🧪 Test
+      run: dotnet test "${{ env.TESTING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --verbosity normal --filter 'Category!=local'
+    - name: 🚀 Publish
+      run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.PUBLISH_DIRECTORY }}"
+
+    - name: 🚢 Deploy to Cloudflare Pages
+      id: cloudflare_pages_deploy
+      uses: cloudflare/pages-action@1
+      with:
+        apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        projectName: ${{ env.PAGES_PROJECTNAME }}
+        directory: ${{ env.PUBLISH_DIRECTORY }}/wwwroot
+        gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: 📖 Add deployment URL as commit status
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const sha = context.payload.pull_request?.head.sha ?? context.sha;
+          await github.rest.repos.createCommitStatus({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            context: 'Cloudflare Pages',
+            description: 'Cloudflare Pages deployment',
+            state: 'success',
+            sha,
+            target_url: "${{ steps.cloudflare_pages_deploy.outputs.url }}",
+          });        
+
