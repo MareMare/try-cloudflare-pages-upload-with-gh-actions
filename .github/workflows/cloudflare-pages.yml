@@ -19,7 +19,7 @@ env:
   WORKING_DIRECTORY: src
   TESTING_DIRECTORY: src
   PUBLISH_DIRECTORY: output
-  PAGES_PROJECTNAME: try-cloudflarepages
+  PAGES_PROJECTNAME: try-cloudflare-pages-upload-with-gh-actions
 
 jobs:
   deploy:
