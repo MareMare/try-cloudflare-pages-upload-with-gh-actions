@@ -51,6 +51,8 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
+    - name: 🧰 Setup .NET workloads
+      run: dotnet workload install wasm-tools
     - name: 🚚 Restore with lock files
       run: dotnet restore "${{ env.WORKING_DIRECTORY }}" --locked-mode
     - name: 🛠️ Build

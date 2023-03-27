@@ -11,3 +11,19 @@ GitHub Actions で `Cloudflare Pages` のアップロードを試してみます
 
 ## Cloudflare Account ID
 ![image](https://user-images.githubusercontent.com/807378/227702537-bb41d82b-87fa-4be2-a3e7-a8c068c44504.png)
+
+## Ahead-Of-Time (AOT) compilation
+
+* `*.csproj`
+  ```xml
+    <PropertyGroup>
+      <TargetFramework>net7.0</TargetFramework>
+      <RunAOTCompilation>true</RunAOTCompilation>
+      <WasmEnableExceptionHandling>true</WasmEnableExceptionHandling>
+    </PropertyGroup>
+  ```
+* `cloudflare-pages.yml`
+  ```yml
+      - name: 🧰 Setup .NET workloads
+        run: dotnet workload install wasm-tools
+  ```
