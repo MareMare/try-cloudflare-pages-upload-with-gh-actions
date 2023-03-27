@@ -2,6 +2,7 @@
 GitHub Actions で `Cloudflare Pages` のアップロードを試してみます。
 * [cloudflare/pages\-action](https://github.com/cloudflare/pages-action)
 * [Use Direct Upload with continuous integration · Cloudflare Pages docs](https://developers.cloudflare.com/pages/how-to/use-direct-upload-with-continuous-integration/)
+* [ASP\.NET Core Blazor WebAssembly のホストと展開 \| Microsoft Learn](https://learn.microsoft.com/ja-jp/aspnet/core/blazor/host-and-deploy/webassembly?view=aspnetcore-7.0)
 
 ## GitHub Actions Secrets
 ![image](https://user-images.githubusercontent.com/807378/227702276-d8ee9ca2-f44d-4a97-a233-9d5c1205776c.png)
