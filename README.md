@@ -28,3 +28,51 @@ GitHub Actions で `Cloudflare Pages` のアップロードを試してみます
       - name: 🧰 Setup .NET workloads
         run: dotnet workload install wasm-tools
   ```
+
+## Brotli Compression
+* `wwwroot\js\decode.js`／`wwwroot\js\decode.min.js`
+  * [google/brotli · GitHub](https://github.com/google/brotli/tree/master/js) から `decode.js` と `decode.min.js` をダウンロード
+  * `wwwroot\js` へコピー
+* `*.csproj`
+  ```xml
+    <PropertyGroup>
+      <BlazorEnableCompression>true</BlazorEnableCompression>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Content Update="wwwroot\js\decode.js">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+  ```
+* `wwwroot\index.html`
+  ```html
+  <body>
+
+      <!-- 👇 ここから -->
+      <script src="_framework/blazor.webassembly.js" autostart="false"></script>
+      <script type="module">
+          import { BrotliDecode } from './js/decode.min.js';
+          Blazor.start({
+            loadBootResource: function (type, name, defaultUri, integrity) {
+              if (type !== 'dotnetjs' && location.hostname !== 'localhost') {
+                return (async function () {
+                  const response = await fetch(defaultUri + '.br', { cache: 'no-cache' });
+                  if (!response.ok) {
+                    throw new Error(response.statusText);
+                  }
+                  const originalResponseBuffer = await response.arrayBuffer();
+                  const originalResponseArray = new Int8Array(originalResponseBuffer);
+                  const decompressedResponseArray = BrotliDecode(originalResponseArray);
+                  const contentType = type === 
+                    'dotnetwasm' ? 'application/wasm' : 'application/octet-stream';
+                  return new Response(decompressedResponseArray, 
+                    { headers: { 'content-type': contentType } });
+                })();
+              }
+            }
+          });
+      </script>
+      <!-- 👆 ここまで -->
+  </body>
+  ```
