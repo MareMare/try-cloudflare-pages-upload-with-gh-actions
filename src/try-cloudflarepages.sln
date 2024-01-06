@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "try-cloudflarepages", "try-cloudflarepages\try-cloudflarepages.csproj", "{6648A9F5-D4BE-4C06-9A2D-9C7CD18BE0E4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "try-cloudflarepages", "try-cloudflarepages\try-cloudflarepages.csproj", "{AFD81230-E5AF-42B7-BBB8-14E60B376CF8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -14,9 +14,9 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6648A9F5-D4BE-4C06-9A2D-9C7CD18BE0E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6648A9F5-D4BE-4C06-9A2D-9C7CD18BE0E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6648A9F5-D4BE-4C06-9A2D-9C7CD18BE0E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6648A9F5-D4BE-4C06-9A2D-9C7CD18BE0E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFD81230-E5AF-42B7-BBB8-14E60B376CF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFD81230-E5AF-42B7-BBB8-14E60B376CF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFD81230-E5AF-42B7-BBB8-14E60B376CF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFD81230-E5AF-42B7-BBB8-14E60B376CF8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

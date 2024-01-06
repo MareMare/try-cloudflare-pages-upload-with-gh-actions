@@ -18,7 +18,7 @@ GitHub Actions で `Cloudflare Pages` のアップロードを試してみます
 * `*.csproj`
   ```xml
     <PropertyGroup>
-      <TargetFramework>net7.0</TargetFramework>
+      <TargetFramework>net8.0</TargetFramework>
       <RunAOTCompilation>true</RunAOTCompilation>
       <WasmEnableExceptionHandling>true</WasmEnableExceptionHandling>
     </PropertyGroup>
@@ -50,12 +50,13 @@ GitHub Actions で `Cloudflare Pages` のアップロードを試してみます
   <body>
 
       <!-- 👇 ここから -->
+      <!-- NOTE: https://learn.microsoft.com/ja-jp/aspnet/core/blazor/host-and-deploy/webassembly?view=aspnetcore-8.0#compression -->
       <script src="_framework/blazor.webassembly.js" autostart="false"></script>
       <script type="module">
           import { BrotliDecode } from './js/decode.min.js';
           Blazor.start({
             loadBootResource: function (type, name, defaultUri, integrity) {
-              if (type !== 'dotnetjs' && location.hostname !== 'localhost') {
+              if (type !== 'dotnetjs' && location.hostname !== 'localhost' && type !== 'configuration') {
                 return (async function () {
                   const response = await fetch(defaultUri + '.br', { cache: 'no-cache' });
                   if (!response.ok) {
@@ -75,4 +76,11 @@ GitHub Actions で `Cloudflare Pages` のアップロードを試してみます
       </script>
       <!-- 👆 ここまで -->
   </body>
+  ```
+
+  ## Run Blazor Web Assembly locally
+* [natemcmaster/dotnet\-serve: Simple command\-line HTTPS server for the \.NET Core CLI](https://github.com/natemcmaster/dotnet-serve)
+  ```ps1
+  dotnet publish src/try-cloudflarepages -c release -o output
+  dotnet serve -o -S -p:7286 -b -d:output/wwwroot
   ```

@@ -14,10 +14,11 @@ on:
 
 env:
   CONFIGURATION: Release
-  DOTNET_CORE_VERSION: 7.0.x
+  DOTNET_VERSION: 8.0.x
   NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
   WORKING_DIRECTORY: src
   TESTING_DIRECTORY: src
+  PUBLISH_PROJECT: src/try-cloudflarepages
   PUBLISH_DIRECTORY: output
   PAGES_PROJECTNAME: try-cloudflare-pages-upload-with-gh-actions
 
@@ -50,7 +51,7 @@ jobs:
     - name: ✨ Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
+        dotnet-version: ${{ env.DOTNET_VERSION }}
     - name: 🧰 Setup .NET workloads
       run: dotnet workload install wasm-tools
     - name: 🚚 Restore with lock files
@@ -60,7 +61,7 @@ jobs:
     - name: 🧪 Test
       run: dotnet test "${{ env.TESTING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --verbosity normal --filter 'Category!=local'
     - name: 🚀 Publish
-      run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.PUBLISH_DIRECTORY }}"
+      run: dotnet publish "${{ env.PUBLISH_PROJECT }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.PUBLISH_DIRECTORY }}"
 
     - name: 🚢 Deploy to Cloudflare Pages
       id: cloudflare_pages_deploy
