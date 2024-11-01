@@ -38,7 +38,7 @@ jobs:
       statuses: write # for commit status
     steps:
     - name: 🛒 Checkout
-      uses: actions/checkout@v4.2.1
+      uses: actions/checkout@v4.2.2
     - name: 💴 Cache
       id: cache-nuget
       uses: actions/cache@v4.1.1
