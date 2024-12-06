@@ -66,13 +66,12 @@ jobs:
       run: dotnet publish "${{ env.PUBLISH_PROJECT }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.PUBLISH_DIRECTORY }}"
 
     - name: 🚢 Deploy to Cloudflare Pages
-      id: cloudflare_pages_deploy
-      uses: cloudflare/pages-action@1
+      id: deploy
+      uses: cloudflare/wrangler-action@v3.10.0
       with:
         apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        projectName: ${{ env.PAGES_PROJECTNAME }}
-        directory: ${{ env.PUBLISH_DIRECTORY }}/wwwroot
+        command: pages deploy ${{ env.PUBLISH_DIRECTORY }}/wwwroot --project-name=${{ env.PAGES_PROJECTNAME }}
         gitHubToken: ${{ secrets.GITHUB_TOKEN }}
 
     - name: 📖 Add deployment URL as commit status
@@ -87,6 +86,6 @@ jobs:
             description: 'Cloudflare Pages deployment',
             state: 'success',
             sha,
-            target_url: "${{ steps.cloudflare_pages_deploy.outputs.url }}",
+            target_url: "${{ steps.deploy.outputs.deployment-url }}",
           });        
 
