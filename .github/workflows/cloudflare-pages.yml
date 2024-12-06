@@ -72,19 +72,7 @@ jobs:
         apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         command: pages deploy ${{ env.PUBLISH_DIRECTORY }}/wwwroot --project-name=${{ env.PAGES_PROJECTNAME }} --commit-dirty=true
-
-    - name: 📖 Add deployment URL as commit status
-      uses: actions/github-script@v7
-      with:
-        script: |
-          const sha = context.payload.pull_request?.head.sha ?? context.sha;
-          await github.rest.repos.createCommitStatus({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            context: 'Cloudflare Pages',
-            description: 'Cloudflare Pages deployment',
-            state: 'success',
-            sha,
-            target_url: "${{ steps.deploy.outputs.deployment-url }}",
-          });        
-
+    - name: 📖 Print deployment URL
+      env:
+        DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment-url }}
+      run: echo "### ✅ Deploy succeeded! [${{ env.PAGES_PROJECTNAME }}.pages.dev](${{ env.DEPLOYMENT_URL }}) 🌟" >> $GITHUB_STEP_SUMMARY
