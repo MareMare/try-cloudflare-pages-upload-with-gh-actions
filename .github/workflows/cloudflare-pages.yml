@@ -71,8 +71,7 @@ jobs:
       with:
         apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        command: pages deploy ${{ env.PUBLISH_DIRECTORY }}/wwwroot --project-name=${{ env.PAGES_PROJECTNAME }}
-        gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+        command: pages deploy ${{ env.PUBLISH_DIRECTORY }}/wwwroot --project-name=${{ env.PAGES_PROJECTNAME }} --commit-dirty=true
 
     - name: 📖 Add deployment URL as commit status
       uses: actions/github-script@v7
