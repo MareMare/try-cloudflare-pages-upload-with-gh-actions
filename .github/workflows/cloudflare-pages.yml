@@ -72,7 +72,8 @@ jobs:
         apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         command: pages deploy ${{ env.PUBLISH_DIRECTORY }}/wwwroot --project-name=${{ env.PAGES_PROJECTNAME }} --commit-dirty=true
+
     - name: 📖 Print deployment URL
       env:
         DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment-url }}
-      run: echo "### ✅ Deploy succeeded! [${{ env.PAGES_PROJECTNAME }}.pages.dev](${{ env.DEPLOYMENT_URL }}) 🌟" >> $GITHUB_STEP_SUMMARY
+      run: echo "### ✅ Deploy succeeded! [${{ env.PAGES_PROJECTNAME }}.pages.dev]($DEPLOYMENT_URL) 🌟" >> $GITHUB_STEP_SUMMARY
