@@ -39,25 +39,14 @@ jobs:
     steps:
     - name: 🛒 Checkout
       uses: actions/checkout@v5.0.0
-    - name: 💴 Cache
-      id: cache-nuget
-      uses: actions/cache@v4.3.0
-      with:
-        path: ${{ env.NUGET_PACKAGES }}
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-nuget-
-    - name: ❔ Cache Hit ${{ steps.cache-nuget.outputs.cache-hit }}
-      run: |
-        echo "→ ${{ steps.cache-nuget.outputs.cache-hit }}"
     - name: ✨ Setup .NET
       uses: actions/setup-dotnet@v5
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
     - name: 🧰 Setup .NET workloads
-      run: dotnet workload install wasm-tools
-    - name: 🚚 Restore with lock files
-      run: dotnet restore "${{ env.WORKING_DIRECTORY }}" --locked-mode
+      run: dotnet workload install wasm-tools-net8
+    - name: 🚚 Restore
+      run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
     - name: 🛠️ Build
       run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
     - name: 🧪 Test
