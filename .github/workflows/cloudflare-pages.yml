@@ -43,8 +43,10 @@ jobs:
       uses: actions/setup-dotnet@v5
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
-    - name: 🧰 Setup .NET workloads
-      run: dotnet workload install wasm-tools-net8
+    - name: 🧰 Setup .NET workload (net8)
+      run: |
+          dotnet workload install wasm-tools-net8 --verbosity minimal || \
+          dotnet workload install wasm-tools --verbosity minimal
     - name: 🚚 Restore
       run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
     - name: 🛠️ Build
